@@ -253,6 +253,14 @@ export function petPanelApp(
     if (!stateApi) {
         stateApi = acquireVsCodeApi();
     }
+    // Crée petsContainer s'il n'existe pas déjà
+    let petsContainer = document.getElementById('petsContainer') as HTMLDivElement;
+    if (!petsContainer) {
+        petsContainer = document.createElement('div');
+        petsContainer.id = 'petsContainer';
+        document.body.appendChild(petsContainer);
+    }
+
     const themeInfo = THEMES[theme];
     // Apply Theme backgrounds
     const foregroundEl = document.getElementById('foreground');
@@ -441,14 +449,349 @@ export function petPanelApp(
         }
     });
 
-    window.addEventListener('resize', function () {
-        initCanvas(PET_CANVAS_ID);
-        initCanvas(FOREGROUND_EFFECT_CANVAS_ID);
-        initCanvas(BACKGROUND_EFFECT_CANVAS_ID);
+    // const boyfriendEl: HTMLImageElement = document.createElement('img');
+    // boyfriendEl.src = 'media/boyfriend/boyfriend.png'; // ton image
+    // boyfriendEl.className = 'pet';
+    // (document.getElementById('petsContainer') as HTMLDivElement).appendChild(boyfriendEl);
 
-        // If current theme has an effect, handle resize
-        if (themeInfo.effect) {
-            themeInfo.effect.handleResize();
-        }
-    });
+    // const collisionEl: HTMLDivElement = document.createElement('div');
+    // collisionEl.className = 'collision';
+    // (document.getElementById('petsContainer') as HTMLDivElement).appendChild(collisionEl);
+
+    // const speechEl: HTMLDivElement = document.createElement('div');
+    // speechEl.className = 'bubble bubble-medium';
+    // speechEl.innerText = '👋';
+    // (document.getElementById('petsContainer') as HTMLDivElement).appendChild(speechEl);
+
+
+
+
+    // Crée l'élément image du boyfriend
+const bfEl = document.createElement('img');
+bfEl.className = 'pet';
+bfEl.src = `${basePetUri}/boyfriend/sprite_test.png`;
+petsContainer.appendChild(bfEl);
+
+// Position et taille
+bfEl.style.position = 'absolute';
+bfEl.style.left = '100px';
+bfEl.style.width = '44px'; // <-- réduit d'un peu moins d'1/3
+
+// Floor pour marcher au sol
+const bffloor = 25; // toujours un peu plus bas
+bfEl.style.bottom = bffloor + 'px';
+
+// Animation simple : alterne entre 2 sprites
+let frame = 1;
+setInterval(() => {
+    frame = frame === 1 ? 2 : 1;
+    bfEl.src = `${basePetUri}/boyfriend/${frame === 1 ? 'sprite_test.png' : 'sprite_test2.png'}`;
+}, 500);
+
+// Déplacement horizontal avec rebond et retournement
+let direction = 1;
+setInterval(() => {
+    const currentLeft = parseInt(bfEl.style.left || '100', 10);
+    const containerWidth = window.innerWidth;
+
+    let newLeft = currentLeft + 1.8 * direction;
+
+    // Limite à la fenêtre et rebond
+    if (newLeft <= 0) {
+        newLeft = 0;
+        direction = 1;
+    } else if (newLeft + bfEl.width >= containerWidth) {
+        newLeft = containerWidth - bfEl.width;
+        direction = -1;
+    }
+
+    bfEl.style.left = `${newLeft}px`;
+
+    // Force le sol à chaque tick
+    bfEl.style.bottom = bffloor + 'px';
+
+    // Retourne l'image selon la direction
+    bfEl.style.transform = `scaleX(${direction})`;
+}, 50);
+
+
+
+
+
+
+
+// // Crée l'élément image du boyfriend
+// const bfEl = document.createElement('img');
+// bfEl.className = 'pet';
+// bfEl.src = `${basePetUri}/boyfriend/sprite_test.png`;
+// petsContainer.appendChild(bfEl);
+
+// // Position et taille
+// bfEl.style.position = 'absolute';
+// bfEl.style.left = '100px';
+// bfEl.style.width = '64px';
+
+// // Floor pour marcher au sol
+// const bffloor = 25; // <-- un peu plus bas
+// bfEl.style.bottom = bffloor + 'px';
+
+// // Animation simple : alterne entre 2 sprites
+// let frame = 1;
+// setInterval(() => {
+//     frame = frame === 1 ? 2 : 1;
+//     bfEl.src = `${basePetUri}/boyfriend/${frame === 1 ? 'sprite_test.png' : 'sprite_test2.jpg'}`;
+// }, 500);
+
+// // Déplacement horizontal avec rebond et retournement
+// let direction = 1;
+// setInterval(() => {
+//     const currentLeft = parseInt(bfEl.style.left || '100', 10);
+//     const containerWidth = window.innerWidth;
+
+//     let newLeft = currentLeft + 2 * direction;
+
+//     // Limite à la fenêtre et rebond
+//     if (newLeft <= 0) {
+//         newLeft = 0;
+//         direction = 1;
+//     } else if (newLeft + bfEl.width >= containerWidth) {
+//         newLeft = containerWidth - bfEl.width;
+//         direction = -1;
+//     }
+
+//     bfEl.style.left = `${newLeft}px`;
+
+//     // Force le sol à chaque tick
+//     bfEl.style.bottom = bffloor + 'px';
+
+//     // Retourne l'image selon la direction
+//     bfEl.style.transform = `scaleX(${direction})`;
+// }, 50);
+
+
+
+
+
+
+// // Crée l'élément image du boyfriend
+// const bfEl = document.createElement('img');
+// bfEl.className = 'pet';
+// bfEl.src = `${basePetUri}/boyfriend/sprite_test.png`;
+// petsContainer.appendChild(bfEl);
+
+// // Position et taille
+// bfEl.style.position = 'absolute';
+// bfEl.style.left = '100px';
+// bfEl.style.width = '64px';
+
+// // Floor pour marcher au sol
+// const bffloor = 40; // <-- un peu plus bas
+// bfEl.style.bottom = bffloor + 'px';
+
+// // Animation simple : alterne entre 2 sprites
+// let frame = 1;
+// setInterval(() => {
+//     frame = frame === 1 ? 2 : 1;
+//     bfEl.src = `${basePetUri}/boyfriend/${frame === 1 ? 'sprite_test.png' : 'sprite_test2.jpg'}`;
+// }, 500);
+
+// // Déplacement horizontal avec rebond et retournement
+// let direction = 1;
+// setInterval(() => {
+//     const currentLeft = parseInt(bfEl.style.left || '100', 10);
+//     const containerWidth = window.innerWidth;
+
+//     let newLeft = currentLeft + 2 * direction;
+
+//     // Limite à la fenêtre et rebond
+//     if (newLeft <= 0) {
+//         newLeft = 0;
+//         direction = 1;
+//     } else if (newLeft + bfEl.width >= containerWidth) {
+//         newLeft = containerWidth - bfEl.width;
+//         direction = -1;
+//     }
+
+//     bfEl.style.left = `${newLeft}px`;
+
+//     // Force le sol à chaque tick
+//     bfEl.style.bottom = bffloor + 'px';
+
+//     // Retourne l'image selon la direction
+//     bfEl.style.transform = `scaleX(${direction})`;
+// }, 50);
+
+
+
+
+
+
+// // Crée l'élément image du boyfriend
+// const bfEl = document.createElement('img');
+// bfEl.className = 'pet';
+// bfEl.src = `${basePetUri}/boyfriend/sprite_test.png`;
+// petsContainer.appendChild(bfEl);
+
+// // Position et taille
+// bfEl.style.position = 'absolute';
+// bfEl.style.left = '100px';
+// bfEl.style.width = '64px';
+
+// // Floor pour marcher au sol
+// const bffloor = 50; // <-- plus bas que 100
+// bfEl.style.bottom = bffloor + 'px';
+
+// // Animation simple : alterne entre 2 sprites
+// let frame = 1;
+// setInterval(() => {
+//     frame = frame === 1 ? 2 : 1;
+//     bfEl.src = `${basePetUri}/boyfriend/${frame === 1 ? 'sprite_test.png' : 'sprite_test2.jpg'}`;
+// }, 500);
+
+// // Déplacement horizontal avec rebond et retournement
+// let direction = 1;
+// setInterval(() => {
+//     const currentLeft = parseInt(bfEl.style.left || '100', 10);
+//     const containerWidth = window.innerWidth;
+
+//     let newLeft = currentLeft + 2 * direction;
+
+//     // Limite à la fenêtre et rebond
+//     if (newLeft <= 0) {
+//         newLeft = 0;
+//         direction = 1;
+//     } else if (newLeft + bfEl.width >= containerWidth) {
+//         newLeft = containerWidth - bfEl.width;
+//         direction = -1;
+//     }
+
+//     bfEl.style.left = `${newLeft}px`;
+
+//     // Force le sol à chaque tick
+//     bfEl.style.bottom = bffloor + 'px';
+
+//     // Retourne l'image selon la direction
+//     bfEl.style.transform = `scaleX(${direction})`;
+// }, 50);
+
+
+
+
+
+
+
+//     // Crée l'élément image du boyfriend
+// const bfEl = document.createElement('img');
+// bfEl.className = 'pet';
+// bfEl.src = `${basePetUri}/boyfriend/sprite_test.png`; // utilise basePetUri
+// petsContainer.appendChild(bfEl);
+
+// // Position et taille
+// bfEl.style.position = 'absolute';
+// bfEl.style.left = '100px';
+// bfEl.style.width = '64px';
+
+// // Floor pour marcher au sol
+// const bffloor = 100; // tu peux ajuster la hauteur du sol
+// bfEl.style.bottom = bffloor + 'px';
+
+// // Animation simple : alterne entre 2 sprites
+// let frame = 1;
+// setInterval(() => {
+//     frame = frame === 1 ? 2 : 1;
+//     bfEl.src = `${basePetUri}/boyfriend/${frame === 1 ? 'sprite_test.png' : 'sprite_test2.jpg'}`;
+// }, 500);
+
+// // Déplacement horizontal avec rebond et retournement
+// let direction = 1;
+// setInterval(() => {
+//     const currentLeft = parseInt(bfEl.style.left || '100', 10);
+//     const containerWidth = window.innerWidth;
+
+//     let newLeft = currentLeft + 2 * direction;
+
+//     // Limite à la fenêtre et rebond
+//     if (newLeft <= 0) {
+//         newLeft = 0;
+//         direction = 1;
+//     } else if (newLeft + bfEl.width >= containerWidth) {
+//         newLeft = containerWidth - bfEl.width;
+//         direction = -1;
+//     }
+
+//     bfEl.style.left = `${newLeft}px`;
+
+//     // Retourne l'image selon la direction
+//     bfEl.style.transform = `scaleX(${direction})`;
+// }, 50);
+
+
+
+
+//     // Crée l'élément image du boyfriend
+// const bfEl = document.createElement('img');
+// bfEl.className = 'pet';
+// bfEl.src = `${basePetUri}/boyfriend/prite_test.png`; // utilise basePetUri
+// petsContainer.appendChild(bfEl);
+
+// // Position et taille
+// bfEl.style.position = 'absolute';
+// bfEl.style.left = '100px';
+// bfEl.style.bottom = '100px';
+// bfEl.style.width = '64px';
+
+// // Animation simple : alterne entre 2 sprites
+// let frame = 1;
+// setInterval(() => {
+//     frame = frame === 1 ? 2 : 1;
+//     bfEl.src = `${basePetUri}/boyfriend/${frame === 1 ? 'sprite_test.png' : 'sprite_test2.jpg'}`;
+// }, 500);
+
+// // Déplacement horizontal
+// let direction = 1;
+// setInterval(() => {
+//     const currentLeft = parseInt(bfEl.style.left || '100', 10);
+//     if (currentLeft > window.innerWidth - 100 || currentLeft < 0) {
+//         direction *= -1;
+//     }
+//     bfEl.style.left = `${currentLeft + 2 * direction}px`;
+// }, 50);
+
+
+
+
+
+
+
+
+
+//     // Crée l'élément image
+// const bfEl = document.createElement('img');
+// bfEl.className = 'pet';
+// bfEl.src = 'media/boyfriend/sprite_test.png'; // image initiale
+// (document.getElementById('petsContainer') as HTMLDivElement).appendChild(bfEl);
+
+// // Position initiale
+// bfEl.style.position = 'absolute';
+// bfEl.style.left = '100px';
+// bfEl.style.bottom = '100px';
+// bfEl.style.width = '64px'; // adapte à la taille de ton sprite
+
+// // Animation simple avec 2 sprites
+// let frame = 1;
+// setInterval(() => {
+//     frame = frame === 1 ? 2 : 1;
+//     bfEl.src = `media/boyfriend/sprite_test2${frame}.jpg`;
+// }, 500); // change de sprite toutes les 0,5s
+
+// // Optionnel : mouvement simple
+// let direction = 1;
+// setInterval(() => {
+//     const currentLeft = parseInt(bfEl.style.left || '100', 10);
+//     if (currentLeft > window.innerWidth - 100 || currentLeft < 0) {
+//         direction *= -1;
+//     }
+//     bfEl.style.left = `${currentLeft + 2 * direction}px`;
+// }, 50);
+//  // bouge de gauche à droite
 }
